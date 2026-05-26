@@ -1,5 +1,5 @@
 ## Remarques générales
-eee
+ee
 Ce code est fourni comme **base de travail** et constitue un **modèle de référence** pour le développement. Il a vocation à être repris, adapté et amélioré en fonction des besoins spécifiques du projet.
 
 ## Points d'attention
