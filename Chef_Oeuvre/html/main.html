@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chef d'oeuvre</title>
     <link rel="stylesheet" href="../css/main.css">
+    <style>
+        /* Conteneur d'aperçu */
+        .preview-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+
+        .square-preview-box {
+            width: 300px; 
+            height: 300px;
+            margin: 15px auto;
+            border: 3px dashed #007bff;
+            border-radius: 8px;
+            background-color: #1a1a1a; 
+            display: none; 
+            overflow: hidden;
+            position: relative;
+        }
+
+        .square-preview-box img, 
+        .square-preview-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        }
+
+        .btn-import {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,20 +56,30 @@
 
     <section class="hero">
         <h2>Personnalisez le panneau</h2>
-        <p>Importer et créer vos images et vidéos pour projeter sur le panneau LED.</p>
+        <p>Importer vos images et vidéos pour projeter sur le panneau LED.</p>
 
         <div class="actions">
+            <input type="file" id="file-picker" accept="image/*,video/*" style="display: none;">
+
             <div class="card">
                 <h3>Importer une image</h3>
-                <a href="../html/personalise/image.html">Commencer</a>
+                <button class="btn-import">Importer</button>
             </div>
             <div class="card">
                 <h3>Importer une vidéo</h3>
-                <a href="../html/personalise/video.html">Commencer</a>
+                <button class="btn-import">Importer</button>
             </div>
             <div class="card">
                 <h3>Créer un Chef Paint</h3>
-                <a href="../html/personalise/paint.html">Commencer</a>
+                <button class="btn-import">Importer</button>
+            </div>
+        </div>
+
+        <div class="preview-container">
+            <h3>Aperçu (Format Panneau 1:1) :</h3>
+            <div id="preview-box" class="square-preview-box">
+                <img id="image-preview" src="#" alt="Aperçu image" style="display: none;">
+                <video id="video-preview" controls style="display: none;"></video>
             </div>
         </div>
     </section>
@@ -40,7 +88,50 @@
         <p>&copy; 2026 Pro B. Tous droits réservés.</p>
     </footer>
 
-    <script type="module" src="../main.js"></script>
-</body>
+    <script>
+        const filePicker = document.getElementById('file-picker');
+        const previewBox = document.getElementById('preview-box');
+        const previewImage = document.getElementById('image-preview');
+        const previewVideo = document.getElementById('video-preview');
+        const importButtons = document.querySelectorAll('.btn-import');
 
+        importButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filePicker.click();
+            });
+        });
+
+        filePicker.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                previewImage.style.display = 'none';
+                previewVideo.style.display = 'none';
+                previewVideo.pause(); 
+
+                reader.onload = function(e) {
+
+                    if (file.type.startsWith('video/')) {
+                        previewVideo.src = e.target.result;
+                        previewVideo.style.display = 'block';
+                    } 
+
+                    else if (file.type.startsWith('image/')) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = 'block';
+                    }
+
+
+                    previewBox.style.display = 'block';
+
+                    console.log("Fichier prêt à être envoyé :", file.name, "(" + file.type + ")");
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
 </html>
